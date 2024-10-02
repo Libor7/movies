@@ -1,0 +1,8 @@
+.container {
+  height: 25vh;
+  overflow: auto;
+}
+
+.description {
+  padding: 0 0.5em;
+}

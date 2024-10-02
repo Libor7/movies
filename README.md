@@ -1,3 +1,29 @@
+# Project Description
+
+This project was written using ReactJS, TypeScript and MaterialUI. 
+
+For global state management I have chosen React Context API, because I think the data will not be changed too often and therefore I didn't have to download Redux as a third party library. It is always better if the code bundle stays smaller. 
+
+For smaller devices - breakpoints xs and sm - I added three vertical dots icon on right side of header for the Fix Header button. It is a toggle button between position fixed and static, I found it a useful feature and therefore I implemented it. 
+
+On a Movie detail page I added the star symbol next to the rating because I think it is better than putting it next to Movie title especially for smaller devices because title can be relatively long and the icon wouldn't fit well there. For screens larger than 1200 pixels I put the Star icon in the same line as the movie title. 
+
+Many movie records have N/A as a poster value, therefore images don't show all the time. I decided to show a Title instead in that case. Search for 'Winnetou' and see pages 2 - 4 for this use case. 
+
+For styling I like to use CSS modules, because I like to have my CSS code in external files. At the projects we used to style with styled() method from MUI. I used CSS modules from beginning, but later I switched from CSS variables in external .css files to the custom MUI theme and therefore I used makeStyles(). I think is important to stay consistent, but I would like to show you all three ways of styling in this project therefore I will leave my 
+.module.css files as it is. 
+
+I try to not put JavaScript code into JSX, I rather do my calculation before rendering JSX and put only the result of calculations into JSX code. I also try to avoid inline styling. Occasionally a short code with sx={} or style={} can be forgiven, if using other methods would not be very beneficial. I think it is a matter of agreement among team members on concrete project, which method they will all adhere to. 
+
+# Project structure
+
+I put basically all files into src folder. In src - components I have all my components, further divided into UI, layout and movie. Every component has its own folder, where are both .tsx and 
+.css files 
+Special pages components are in pages folder in src 
+
+In src - helpers folder I have some util methods. I use to put my data types like interfaces, enums, types and constants into src - model. In src - store I have my context API. 
+Outside of those folders are only few files, App.tsx - our root component, index.tsx where our application starts, index.css with some global styles and some configuration files: tsconfig.json, package.json, package-lock.json, gitignore file and this readme file. 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

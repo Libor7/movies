@@ -1,0 +1,18 @@
+.container {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: center;
+  list-style-type: none;
+  margin: 2em 0;
+  padding: 0 2em;
+}
+
+.fixed {
+  margin-top: 5.5em;
+}
+
+.static {
+  margin-top: 2em;
+}
