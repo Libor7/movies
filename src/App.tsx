@@ -5,12 +5,13 @@ import MainLayout, {
   loader as MainLayoutLoader,
 } from "./components/layout/main-layout/MainLayout";
 import Error from "./pages/ErrorPage";
-import { loader as MovieDetailLoader } from "./pages/MoviePage";
 
 /** LIBRARIES */
 import { Suspense, lazy } from "react";
 import {
   createBrowserRouter,
+  LoaderFunctionArgs,
+  Params,
   redirect,
   RouterProvider,
 } from "react-router-dom";
@@ -29,12 +30,28 @@ const router = createBrowserRouter([
     children: [
       { index: true, loader: async () => redirect("movies") },
       { path: "movies", element: <Movies /> },
-      { path: "movies/:id", element: <Movie />, loader: MovieDetailLoader },
+      {
+        path: "movies/:id",
+        element: <Movie />,
+        loader: ({
+          request,
+          params,
+        }: LoaderFunctionArgs<{ request: Request; params: Params<string> }>) =>
+          import("./pages/MoviePage").then((module) =>
+            module.loader({ request, params })
+          ),
+      },
       { path: "favorite-movies", element: <FavoriteMovies /> },
       {
         path: "favorite-movies/:id",
         element: <Movie />,
-        loader: MovieDetailLoader,
+        loader: ({
+          request,
+          params,
+        }: LoaderFunctionArgs<{ request: Request; params: Params<string> }>) =>
+          import("./pages/MoviePage").then((module) =>
+            module.loader({ request, params })
+          ),
       },
     ],
   },
