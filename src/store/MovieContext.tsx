@@ -44,6 +44,7 @@ const initialMovieContext = {
   searchedText: "",
   miscellaneousData: initialMiscellaneousData,
   changePagination: () => {},
+  loadPagination: (paginationObject: IPagination) => {},
   addToFavorite: (movie: IMovie) => {},
   removeFromFavorite: (movie: IMovie) => {},
   loadFavoriteMovies: (movies: IMovie[]) => {},
@@ -75,17 +76,23 @@ export const MovieContextProvider: FC<PropsWithChildren> = ({ children }) => {
     setPagination((prevState) => {
       const { key, state, value } = options;
 
-      return {
+      const newState = {
         ...prevState,
         [state]: {
           ...prevState[state],
           [key]: value,
         },
       };
+      localStorage.setItem("pagination", JSON.stringify(newState));
+      return newState;
     });
   }, []);
 
-  const changeMovies = useCallback((movie: IMovie) => {
+  const loadPagination = useCallback((paginationObject: IPagination) => {
+    setPagination(paginationObject);
+  }, []);
+
+  const changeMovie = useCallback((movie: IMovie) => {
     const updatedMovie = { ...movie, isFavorite: !movie.isFavorite };
 
     setMovies((prevState) => {
@@ -94,34 +101,39 @@ export const MovieContextProvider: FC<PropsWithChildren> = ({ children }) => {
         (mov) => movie.imdbID === mov.imdbID
       );
       updatedMovies[indexOfMovie] = updatedMovie;
+      localStorage.setItem("movies", JSON.stringify(updatedMovies));
       return updatedMovies;
     });
   }, []);
 
   const addToFavorite = useCallback(
     (movie: IMovie) => {
-      changeMovies(movie);
-      setFavoriteMovies((prevState) => [
-        ...prevState,
-        { ...movie, isFavorite: !movie.isFavorite },
-      ]);
+      changeMovie(movie);
+      setFavoriteMovies((prevState) => {
+        const newState = [
+          ...prevState,
+          { ...movie, isFavorite: !movie.isFavorite },
+        ];
+        localStorage.setItem("favoriteMovies", JSON.stringify(newState));
+        return newState;
+      });
     },
-    [changeMovies]
+    [changeMovie]
   );
 
   const removeFromFavorite = useCallback(
     (movie: IMovie) => {
-      changeMovies(movie);
+      changeMovie(movie);
       setFavoriteMovies((prevState) =>
         prevState.filter((favMovie) => favMovie.imdbID !== movie.imdbID)
       );
     },
-    [changeMovies]
+    [changeMovie]
   );
 
   const loadFavoriteMovies = useCallback((movies: IMovie[]) => {
     setFavoriteMovies(movies);
-  }, []); 
+  }, []);
 
   const processMovieData = useCallback(
     (data: IMovieData[]): IMovie[] => {
@@ -133,10 +145,12 @@ export const MovieContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const setNewMovies = useCallback((movies: IMovie[]) => {
     setMovies(movies);
+    localStorage.setItem("movies", JSON.stringify(movies));
   }, []);
 
   const setSearchedString = useCallback((text: string) => {
     setSearchedText(text);
+    localStorage.setItem("searchedText", JSON.stringify(text));
   }, []);
 
   return (
@@ -148,6 +162,7 @@ export const MovieContextProvider: FC<PropsWithChildren> = ({ children }) => {
         searchedText,
         miscellaneousData,
         changePagination,
+        loadPagination,
         addToFavorite,
         removeFromFavorite,
         loadFavoriteMovies,

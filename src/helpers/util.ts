@@ -45,13 +45,3 @@ export const parseMovieData = (
   }
   return movies;
 };
-
-export const setToLocalStorage = (key: string, value: any) => {
-  localStorage.setItem(key, JSON.stringify(value));
-  return value;
-};
-
-export const getFromLocalStorage = (key: string, initValue: any) => {
-  const data = localStorage.getItem(key);
-  return !data ? setToLocalStorage(key, initValue) : JSON.parse(data);
-};

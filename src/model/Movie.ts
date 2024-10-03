@@ -34,6 +34,7 @@ export interface IMovieState {
   searchedText: string;
   miscellaneousData: IMiscellaneous;
   changePagination: (options: IPaginationOptions) => void;
+  loadPagination: (paginationObject: IPagination) => void;
   addToFavorite: (movie: IMovie) => void;
   removeFromFavorite: (movie: IMovie) => void;
   loadFavoriteMovies: (movies: IMovie[]) => void,

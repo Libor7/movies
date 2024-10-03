@@ -1,9 +1,8 @@
 /** COMPONENTS */
 import CircularProgress from "@mui/material/CircularProgress";
 
-import MainLayout, {
-  loader as MainLayoutLoader,
-} from "./components/layout/main-layout/MainLayout";
+/** CUSTOM COMPONENTS */
+import MainLayout from "./components/layout/main-layout/MainLayout";
 import Error from "./pages/ErrorPage";
 
 /** LIBRARIES */
@@ -25,8 +24,6 @@ const router = createBrowserRouter([
     path: "/",
     element: <MainLayout />,
     errorElement: <Error />,
-    id: "root",
-    loader: MainLayoutLoader,
     children: [
       { index: true, loader: async () => redirect("movies") },
       { path: "movies", element: <Movies /> },

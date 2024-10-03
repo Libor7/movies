@@ -10,15 +10,11 @@ import {
 
 /** MODELS */
 import { CONTENT } from "../model/constants";
-import { IMovie, IPagination } from "../model/Movie";
-
-/** OTHER */
-import { getFromLocalStorage } from "../helpers/util";
 
 /** STYLES */
 import { makeStyles } from "@mui/styles";
-import { useContext, useEffect, useLayoutEffect } from "react";
-import { initialPagination, MovieContext } from "../store/MovieContext";
+import { useContext, useLayoutEffect } from "react";
+import { MovieContext } from "../store/MovieContext";
 
 const useStyles = makeStyles(() => ({
   "error-wrapper": {
@@ -42,101 +38,23 @@ const Error = () => {
   const error = useRouteError() as Response | ErrorResponse;
   const styles = useStyles();
   const {
-    movies,
-    favoriteMovies,
-    pagination,
-    searchedText,
-    changePagination,
+    loadPagination,
     loadFavoriteMovies,
     setNewMovies,
     setSearchedString,
   } = useContext(MovieContext);
 
   useLayoutEffect(() => {
-    const favMovies = getFromLocalStorage("favoriteMovies", []) as IMovie[];
-    loadFavoriteMovies(favMovies);
-  }, [loadFavoriteMovies]);
+    const storedSearchedText = localStorage.getItem("searchedText");
+    const storedMovies = localStorage.getItem("movies");
+    const storedFavoriteMovies = localStorage.getItem("favoriteMovies");
+    const storedPagination = localStorage.getItem("pagination");
 
-  useEffect(() => {
-    loadFavoriteMovies(favoriteMovies);
-  }, [favoriteMovies, loadFavoriteMovies]);
-
-  useLayoutEffect(() => {
-    const movies = getFromLocalStorage("movies", []) as IMovie[];
-    setNewMovies(movies);
-  }, [setNewMovies]);
-
-  useEffect(() => {
-    setNewMovies(movies);
-  }, [movies, setNewMovies]);
-
-  useLayoutEffect(() => {
-    const searchedText = getFromLocalStorage("searchedText", "") as string;
-    setSearchedString(searchedText);
-  }, [setSearchedString]);
-
-  useEffect(() => {
-    setSearchedString(searchedText);
-  }, [searchedText, setSearchedString]);
-
-  useLayoutEffect(() => {
-    const pagination = getFromLocalStorage(
-      "pagination",
-      initialPagination
-    ) as IPagination;
-    changePagination({
-      key: "currentPage",
-      state: "favorite",
-      value: pagination.favorite.currentPage,
-    });
-    changePagination({
-      key: "pages",
-      state: "favorite",
-      value: pagination.favorite.pages,
-    });
-    changePagination({
-      key: "currentPage",
-      state: "movies",
-      value: pagination.movies.currentPage,
-    });
-    changePagination({
-      key: "pages",
-      state: "movies",
-      value: pagination.movies.pages,
-    });
-  }, [changePagination]);
-
-  useEffect(() => {
-    changePagination({
-      key: "currentPage",
-      state: "movies",
-      value: pagination.movies.currentPage,
-    });
-  }, [pagination.movies.currentPage, changePagination]);
-
-  useEffect(() => {
-    changePagination({
-      key: "pages",
-      state: "movies",
-      value: pagination.movies.pages,
-    });
-  }, [pagination.movies.pages, changePagination]);
-
-  useEffect(() => {
-    changePagination({
-      key: "currentPage",
-      state: "favorite",
-      value: pagination.favorite.currentPage,
-    });
-  }, [pagination.favorite.currentPage, changePagination]);
-
-  useEffect(() => {
-    changePagination({
-      key: "pages",
-      state: "favorite",
-      value: pagination.favorite.pages,
-    });
-  }, [pagination.favorite.pages, changePagination]);
+    if (storedSearchedText) setSearchedString(JSON.parse(storedSearchedText));
+    if (storedMovies) setNewMovies(JSON.parse(storedMovies));
+    if (storedFavoriteMovies) loadFavoriteMovies(JSON.parse(storedFavoriteMovies));
+    if (storedPagination) loadPagination(JSON.parse(storedPagination));
+  }, [loadFavoriteMovies, loadPagination, setNewMovies, setSearchedString]);
 
   let errorMessage = CONTENT.ERROR_MESSAGE_GENERIC;
   const isPageNotFound = error.status === 404;
